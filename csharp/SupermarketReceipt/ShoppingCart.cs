@@ -26,41 +26,21 @@ public class ShoppingCart
         }
     }
         
-    public void HandleOffers(Receipt receipt, Dictionary<Product, IOffer> offers, ISupermarketCatalog catalog)
+    public IEnumerable<Discount> GetDiscounts(Dictionary<Product, IOffer> offers, ISupermarketCatalog catalog)
     {
         foreach (var kvp in _productQuantities)
         {
             var product = kvp.Key;
-                        
+            var quantity = kvp.Value;
+
             if (offers.TryGetValue(product, out var offer))
             {                
                 var unitPrice = catalog.GetUnitPrice(product);
-                var quantity = kvp.Value;
-                var quantityAsInt = (int)quantity;
-
-                var discount = GetDiscount(product, offer, quantityAsInt, quantity, unitPrice);
+                                
+                var discount = offer.GetDiscount(quantity, unitPrice);
                 if (discount != null)
-                    receipt.AddDiscount(discount);
+                    yield return discount;
             }
         }
     }
-
-    private Discount? GetDiscount(Product p, IOffer offer, int quantityAsInt, 
-        double quantity, double unitPrice)
-    {                
-        if (offer is ThreeForTwoOffer threeForTwoOffer)
-        {               
-             return threeForTwoOffer.GetDiscount(quantity, unitPrice);
-        }
-        else if (offer is ForAmountOffer forAmountOffer)
-        {                    
-            return forAmountOffer.GetDiscount(quantity, unitPrice);
-        }        
-        else if (offer is TenPercentOffer tenPercentOffer)
-        {            
-            return tenPercentOffer.GetDiscount(quantity, unitPrice);
-        }
-
-        return null;
-    }    
 }

@@ -1,16 +1,12 @@
 namespace SupermarketReceipt.Offers;
 
-public class ThreeForTwoOffer: IOffer
+public class ThreeForTwoOffer: OfferBase, IOffer
 {
-    public ThreeForTwoOffer(Product product)
+    public ThreeForTwoOffer(Product product) : base(SpecialOfferType.ThreeForTwo, product)
     {
-        Product = product;
+        
     }
-
-    public Product Product { get; }
-    public SpecialOfferType OfferType => SpecialOfferType.ThreeForTwo;
-    public double Argument => throw new NotImplementedException();
-
+        
     public Discount? GetDiscount(double quantity, double unitPrice)
     {
         var quantityAsInt = (int)quantity;

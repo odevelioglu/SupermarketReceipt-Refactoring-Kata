@@ -4,5 +4,5 @@ public interface IOffer
 {
     Product Product { get; }
     SpecialOfferType OfferType { get; }
-    double Argument { get; }
+    Discount? GetDiscount(double quantity, double unitPrice);
 }

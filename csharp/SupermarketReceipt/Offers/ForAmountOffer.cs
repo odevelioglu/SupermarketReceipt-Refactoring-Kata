@@ -1,21 +1,18 @@
 namespace SupermarketReceipt.Offers;
 
-public class ForAmountOffer: IOffer
+public class ForAmountOffer: OfferBase, IOffer
 {
     private static readonly CultureInfo Culture = CultureInfo.CreateSpecificCulture("en-GB");
 
     public ForAmountOffer(Product product, int productCount, double discountedPrice)
-    {
-        Product = product;
+        :base(productCount == 5 ? SpecialOfferType.FiveForAmount : SpecialOfferType.TwoForAmount, product)
+    {        
         DiscountedPrice = discountedPrice;
         ProductCount = productCount;
     }
 
     public int ProductCount { get; }
     public double DiscountedPrice { get; }
-    public Product Product { get; }
-    public SpecialOfferType OfferType => ProductCount == 5 ? SpecialOfferType.FiveForAmount : SpecialOfferType.TwoForAmount;
-    public double Argument => throw new NotImplementedException();
 
     public Discount? GetDiscount(double quantity, double unitPrice)
     {

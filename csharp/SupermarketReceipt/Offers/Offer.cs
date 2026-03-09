@@ -1,15 +1,13 @@
 namespace SupermarketReceipt.Offers;
 
-public class Offer: IOffer
+public class OfferBase
 {
-    public Offer(SpecialOfferType offerType, Product product, double argument)
+    public OfferBase(SpecialOfferType offerType, Product product)
     {
-        OfferType = offerType;
-        Argument = argument;
+        OfferType = offerType;        
         Product = product;
     }
 
     public Product Product { get; }
-    public SpecialOfferType OfferType { get; }
-    public double Argument { get; }
+    public SpecialOfferType OfferType { get; }    
 }

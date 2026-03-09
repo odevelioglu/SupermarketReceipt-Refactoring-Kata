@@ -1,16 +1,12 @@
 namespace SupermarketReceipt.Offers;
 
-public class TenPercentOffer: IOffer
+public class TenPercentOffer: OfferBase, IOffer
 {
-    public TenPercentOffer(Product product)
+    public TenPercentOffer(Product product):base(SpecialOfferType.TenPercentDiscount, product)
     {
-        Product = product;        
+               
     }
-    
-    public Product Product { get; }
-    public SpecialOfferType OfferType => SpecialOfferType.TenPercentDiscount;
-    public double Argument => throw new NotImplementedException();
-
+        
     public Discount? GetDiscount(double quantity, double unitPrice)
     {
         const int percent = 10;

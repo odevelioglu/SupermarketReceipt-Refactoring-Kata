@@ -11,12 +11,7 @@ public class Teller
     {
         _catalog = catalog;
     }
-
-    public void AddSpecialOffer(SpecialOfferType offerType, Product product, double argument)
-    {
-        _offers[product] = new Offer(offerType, product, argument);
-    }
-
+    
     public void AddSpecialOffer(IOffer offer)
     {
         _offers[offer.Product] = offer;
@@ -33,7 +28,8 @@ public class Teller
             receipt.AddProduct(pq.Product, pq.Quantity, unitPrice, price);
         }
 
-        theCart.HandleOffers(receipt, _offers, _catalog);
+        var discounts = theCart.GetDiscounts(_offers, _catalog);
+        receipt.Discounts.AddRange(discounts);
 
         return receipt;
     }
