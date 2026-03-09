@@ -8,7 +8,7 @@ public class ThreeForTwoTests: SpecialOffersTestBase
         _theCart.AddItem(_toothbrush);
         _theCart.AddItem(_toothbrush);
         _theCart.AddItem(_toothbrush);
-        _teller.AddSpecialOffer(SpecialOfferType.ThreeForTwo, _toothbrush, _catalog.GetUnitPrice(_toothbrush));
+        _teller.AddSpecialOffer(new ThreeForTwoOffer(_toothbrush));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
     }
@@ -21,7 +21,7 @@ public class ThreeForTwoTests: SpecialOffersTestBase
         _theCart.AddItem(_toothbrush);
         _theCart.AddItem(_toothbrush);
         _theCart.AddItem(_toothbrush);
-        _teller.AddSpecialOffer(SpecialOfferType.ThreeForTwo, _toothbrush, _catalog.GetUnitPrice(_toothbrush));
+        _teller.AddSpecialOffer(new ThreeForTwoOffer(_toothbrush));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
     }
@@ -35,7 +35,7 @@ public class ThreeForTwoTests: SpecialOffersTestBase
         _theCart.AddItem(_toothbrush);
         _theCart.AddItem(_toothbrush);
         _theCart.AddItem(_toothbrush);
-        _teller.AddSpecialOffer(SpecialOfferType.ThreeForTwo, _toothbrush, _catalog.GetUnitPrice(_toothbrush));
+        _teller.AddSpecialOffer(new ThreeForTwoOffer(_toothbrush));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
     }

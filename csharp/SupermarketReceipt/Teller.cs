@@ -3,7 +3,7 @@ namespace SupermarketReceipt;
 public class Teller
 {
     private readonly ISupermarketCatalog _catalog;
-    private readonly Dictionary<Product, Offer> _offers = new ();
+    private readonly Dictionary<Product, IOffer> _offers = new ();
 
     public Teller(ISupermarketCatalog catalog)
     {
@@ -13,6 +13,11 @@ public class Teller
     public void AddSpecialOffer(SpecialOfferType offerType, Product product, double argument)
     {
         _offers[product] = new Offer(offerType, product, argument);
+    }
+
+    public void AddSpecialOffer(IOffer offer)
+    {
+        _offers[offer.Product] = offer;
     }
 
     public Receipt ChecksOutArticlesFrom(ShoppingCart theCart)

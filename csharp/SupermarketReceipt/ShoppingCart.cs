@@ -1,5 +1,3 @@
-using System;
-
 namespace SupermarketReceipt;
 
 public class ShoppingCart
@@ -27,32 +25,31 @@ public class ShoppingCart
         }
     }
         
-    public void HandleOffers(Receipt receipt, Dictionary<Product, Offer> offers, ISupermarketCatalog catalog)
+    public void HandleOffers(Receipt receipt, Dictionary<Product, IOffer> offers, ISupermarketCatalog catalog)
     {
-        foreach (var p in _productQuantities.Keys)
+        foreach (var kvp in _productQuantities)
         {
-            var quantity = _productQuantities[p];
-            var quantityAsInt = (int) quantity;
-            if (offers.ContainsKey(p))
-            {
-                var offer = offers[p];
-                var unitPrice = catalog.GetUnitPrice(p);
-                
-                var discount = GetDiscount(p, offer, quantityAsInt, quantity, unitPrice);
+            var product = kvp.Key;
+                        
+            if (offers.TryGetValue(product, out var offer))
+            {                
+                var unitPrice = catalog.GetUnitPrice(product);
+                var quantity = kvp.Value;
+                var quantityAsInt = (int)quantity;
+
+                var discount = GetDiscount(product, offer, quantityAsInt, quantity, unitPrice);
                 if (discount != null)
                     receipt.AddDiscount(discount);
             }
         }
     }
 
-    private Discount? GetDiscount(Product p, Offer offer, int quantityAsInt, 
+    private Discount? GetDiscount(Product p, IOffer offer, int quantityAsInt, 
         double quantity, double unitPrice)
     {                
-        if (offer.OfferType == SpecialOfferType.ThreeForTwo && quantityAsInt > 2)
+        if (offer is ThreeForTwoOffer threeForTwoOffer)
         {               
-            var numberOfXs = quantityAsInt / 3;
-            var discountAmount = quantity * unitPrice - (numberOfXs * 2 * unitPrice + quantityAsInt % 3 * unitPrice);
-            return new Discount(p, "3 for 2", -discountAmount);            
+             return threeForTwoOffer.GetDiscount(quantity, unitPrice);
         }
         else if (offer.OfferType == SpecialOfferType.TwoForAmount && quantityAsInt >= 2)
         {                    
@@ -70,7 +67,7 @@ public class ShoppingCart
         return null;
     }
 
-    private Discount GetDiscountForAmount(Product p, Offer offer, int quantityAsInt,
+    private Discount GetDiscountForAmount(Product p, IOffer offer, int quantityAsInt,
         double quantity, double unitPrice, int x) 
     {        
         var numberOfXs = quantityAsInt / x;
