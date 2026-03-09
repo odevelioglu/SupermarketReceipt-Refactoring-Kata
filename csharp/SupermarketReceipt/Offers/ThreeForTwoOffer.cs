@@ -11,13 +11,13 @@ public class ThreeForTwoOffer: OfferBase, IOffer
     {
         var quantityAsInt = (int)quantity;
 
-        if (quantityAsInt > 2)
+        if (quantityAsInt <= 2)
         {
-            var numberOfXs = quantityAsInt / 3;
-            var discountAmount = quantity * unitPrice - (numberOfXs * 2 * unitPrice + quantityAsInt % 3 * unitPrice);
-            return new Discount(Product, "3 for 2", -discountAmount);
+            return null;
         }
-        
-        return null;
+
+        var numberOfXs = quantityAsInt / 3;
+        var discountAmount = quantity * unitPrice - (numberOfXs * 2 * unitPrice + quantityAsInt % 3 * unitPrice);
+        return new Discount(Product, "3 for 2", -discountAmount);        
     }
 }

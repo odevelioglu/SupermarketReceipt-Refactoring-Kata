@@ -2,8 +2,6 @@ namespace SupermarketReceipt.Offers;
 
 public class ForAmountOffer: OfferBase, IOffer
 {
-    private static readonly CultureInfo Culture = CultureInfo.CreateSpecificCulture("en-GB");
-
     public ForAmountOffer(Product product, int productCount, double discountedPrice)
         :base(productCount == 5 ? SpecialOfferType.FiveForAmount : SpecialOfferType.TwoForAmount, product)
     {        
@@ -18,20 +16,15 @@ public class ForAmountOffer: OfferBase, IOffer
     {
         var quantityAsInt = (int)quantity;
 
-        if (quantityAsInt >= this.ProductCount)
-        { 
-            var numberOfXs = quantityAsInt / this.ProductCount;
-            var discountTotal = unitPrice * quantity - (this.DiscountedPrice * numberOfXs + quantityAsInt % this.ProductCount * unitPrice);
-            var description = $"{this.ProductCount} for {PrintPrice(this.DiscountedPrice)}";
-
-            return new Discount(this.Product, description, -discountTotal);
+        if (quantityAsInt < this.ProductCount)
+        {
+            return null;
         }
+         
+        var numberOfXs = quantityAsInt / this.ProductCount;
+        var discountTotal = unitPrice * quantity - (this.DiscountedPrice * numberOfXs + quantityAsInt % this.ProductCount * unitPrice);
+        var description = $"{this.ProductCount} for {PrintPrice(this.DiscountedPrice)}";
 
-        return null;
-    }
-
-    private string PrintPrice(double price)
-    {
-        return price.ToString("N2", Culture);
+        return new Discount(this.Product, description, -discountTotal);
     }
 }

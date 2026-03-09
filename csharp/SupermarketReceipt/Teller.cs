@@ -1,5 +1,3 @@
-using SupermarketReceipt.Offers;
-
 namespace SupermarketReceipt;
 
 public class Teller
