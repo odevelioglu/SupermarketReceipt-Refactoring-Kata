@@ -1,6 +1,6 @@
 namespace SupermarketReceipt;
 
-public class Product
+public class Product: IEquatable<Product>
 {
     public Product(string name, ProductUnit unit)
     {
@@ -11,19 +11,19 @@ public class Product
     public string Name { get; }
     public ProductUnit Unit { get; }
 
-    public override bool Equals(object obj)
+    #region Equality Members
+    public bool Equals(Product? other)
     {
-        var product = obj as Product;
-        return product != null &&
-               Name == product.Name &&
-               Unit == product.Unit;
+        if (ReferenceEquals(other, null)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        if (GetType() != other.GetType()) return false;
+
+        return string.Equals(Name, other.Name, StringComparison.InvariantCulture)
+               && Unit == other.Unit;
     }
 
-    public override int GetHashCode()
-    {
-        var hashCode = -1996304355;
-        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
-        hashCode = hashCode * -1521134295 + Unit.GetHashCode();
-        return hashCode;
-    }
+    public override bool Equals(object? obj) => Equals(obj as Product);
+
+    public override int GetHashCode() => HashCode.Combine(Name, Unit);
+    #endregion
 }

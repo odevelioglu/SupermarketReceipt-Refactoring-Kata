@@ -2,14 +2,9 @@ namespace SupermarketReceipt;
 
 public class ShoppingCart
 {
-    private readonly List<ProductQuantity> _items = new List<ProductQuantity>();
-    private readonly Dictionary<Product, double> _productQuantities = new Dictionary<Product, double>();
+    public List<ProductQuantity> Items { get; } = new ();
+    private readonly Dictionary<Product, double> _productQuantities = new ();
     private static readonly CultureInfo Culture = CultureInfo.CreateSpecificCulture("en-GB");
-
-    public List<ProductQuantity> GetItems()
-    {
-        return new List<ProductQuantity>(_items);
-    }
 
     public void AddItem(Product product)
     {
@@ -18,11 +13,11 @@ public class ShoppingCart
 
     public void AddItemQuantity(Product product, double quantity)
     {
-        _items.Add(new ProductQuantity(product, quantity));
-        if (_productQuantities.ContainsKey(product))
+        Items.Add(new ProductQuantity(product, quantity));
+
+        if (_productQuantities.TryGetValue(product, out var currentQuantity))
         {
-            var newAmount = _productQuantities[product] + quantity;
-            _productQuantities[product] = newAmount;
+            _productQuantities[product] = currentQuantity + quantity;
         }
         else
         {
@@ -30,6 +25,7 @@ public class ShoppingCart
         }
     }
 
+    //TODO: Refactor method
     public void HandleOffers(Receipt receipt, Dictionary<Product, Offer> offers, ISupermarketCatalog catalog)
     {
         foreach (var p in _productQuantities.Keys)

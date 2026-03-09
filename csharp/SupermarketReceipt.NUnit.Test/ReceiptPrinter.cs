@@ -12,8 +12,8 @@ public class ReceiptPrinter
 
         var result = new StringBuilder();
 
-        receipt.GetItems().ForEach(item => result.Append(PrintReceiptItem(item)));
-        receipt.GetDiscounts().ForEach(discount => result.Append(PrintDiscount(discount)));
+        receipt.Items.ForEach(item => result.Append(PrintReceiptItem(item)));
+        receipt.Discounts.ForEach(discount => result.Append(PrintDiscount(discount)));
                                 
         result.AppendLine();
         result.Append(PrintTotal(receipt));
@@ -23,8 +23,8 @@ public class ReceiptPrinter
 
     private void SetColumnSize(Receipt receipt)
     {
-        var maxNameLength = receipt.GetItems().Any()
-            ? receipt.GetItems().Max(item => item.Product.Name.Length)
+        var maxNameLength = receipt.Items.Any()
+            ? receipt.Items.Max(item => item.Product.Name.Length)
             : 0;
 
         _columns = Math.Max(40, maxNameLength + 10);

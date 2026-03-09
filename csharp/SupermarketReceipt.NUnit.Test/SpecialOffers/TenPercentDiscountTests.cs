@@ -23,9 +23,9 @@ public class TenPercentDiscountTests: SpecialOffersTestBase
 
         // ASSERT
         Assert.That(receipt.GetTotalPrice().Equals(4.975));
-        Assert.That(receipt.GetDiscounts(), Is.Empty);
-        Assert.That(receipt.GetItems().Count.Equals(1));
-        var receiptItem = receipt.GetItems()[0];
+        Assert.That(receipt.Discounts, Is.Empty);
+        Assert.That(receipt.Items.Count.Equals(1));
+        var receiptItem = receipt.Items[0];
         Assert.That(receiptItem.Product.Equals(apples));
         Assert.That(receiptItem.Price.Equals(1.99));
         Assert.That(receiptItem.TotalPrice.Equals(2.5 * 1.99));

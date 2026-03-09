@@ -2,7 +2,7 @@ namespace SupermarketReceipt;
 
 public class Offer
 {
-    private Product _product;
+    private Product _product; //TODO: why never used? 
 
     public Offer(SpecialOfferType offerType, Product product, double argument)
     {

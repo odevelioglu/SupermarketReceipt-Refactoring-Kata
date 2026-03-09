@@ -3,7 +3,7 @@ namespace SupermarketReceipt;
 public class Teller
 {
     private readonly ISupermarketCatalog _catalog;
-    private readonly Dictionary<Product, Offer> _offers = new Dictionary<Product, Offer>();
+    private readonly Dictionary<Product, Offer> _offers = new ();
 
     public Teller(ISupermarketCatalog catalog)
     {
@@ -18,8 +18,8 @@ public class Teller
     public Receipt ChecksOutArticlesFrom(ShoppingCart theCart)
     {
         var receipt = new Receipt();
-        var productQuantities = theCart.GetItems();
-        foreach (var pq in productQuantities)
+        
+        foreach (var pq in theCart.Items)
         {
             var p = pq.Product;
             var quantity = pq.Quantity;
