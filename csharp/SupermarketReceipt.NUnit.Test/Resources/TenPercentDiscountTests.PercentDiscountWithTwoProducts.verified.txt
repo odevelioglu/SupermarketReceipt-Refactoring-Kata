@@ -1,0 +1,6 @@
+﻿rice                                2.99
+apples                              1.99
+10% off(rice)                      -0.30
+10% off(apples)                    -0.20
+
+Total:                              4.48

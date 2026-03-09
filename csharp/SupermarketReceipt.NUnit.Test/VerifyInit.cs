@@ -1,14 +1,10 @@
-﻿using System.Runtime.CompilerServices;
-using VerifyNUnit;
+﻿namespace SupermarketReceipt.Test;
 
-namespace SupermarketReceipt.Test
+public static class VerifyInit
 {
-    public static class VerifyInit
+    [ModuleInitializer]
+    public static void Init()
     {
-        [ModuleInitializer]
-        public static void Init()
-        {
-            Verifier.UseProjectRelativeDirectory("Resources");
-        }
+        Verifier.UseProjectRelativeDirectory("Resources");
     }
 }
