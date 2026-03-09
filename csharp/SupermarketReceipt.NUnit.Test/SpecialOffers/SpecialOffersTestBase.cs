@@ -2,7 +2,7 @@
 
 public class SpecialOffersTestBase
 {
-    public SupermarketCatalog _catalog;
+    public ISupermarketCatalog _catalog;
     public Teller _teller;
     public ShoppingCart _theCart;
     public Product _toothbrush;
