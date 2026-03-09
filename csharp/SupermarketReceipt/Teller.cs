@@ -20,12 +20,10 @@ public class Teller
         var receipt = new Receipt();
         
         foreach (var pq in theCart.Items)
-        {
-            var p = pq.Product;
-            var quantity = pq.Quantity;
-            var unitPrice = _catalog.GetUnitPrice(p);
-            var price = quantity * unitPrice;
-            receipt.AddProduct(p, quantity, unitPrice, price);
+        {           
+            var unitPrice = _catalog.GetUnitPrice(pq.Product);
+            var price = pq.Quantity * unitPrice;
+            receipt.AddProduct(pq.Product, pq.Quantity, unitPrice, price);
         }
 
         theCart.HandleOffers(receipt, _offers, _catalog);

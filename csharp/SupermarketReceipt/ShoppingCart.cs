@@ -1,3 +1,5 @@
+using System;
+
 namespace SupermarketReceipt;
 
 public class ShoppingCart
@@ -24,8 +26,7 @@ public class ShoppingCart
             _productQuantities.Add(product, quantity);
         }
     }
-
-    //TODO: Refactor method
+        
     public void HandleOffers(Receipt receipt, Dictionary<Product, Offer> offers, ISupermarketCatalog catalog)
     {
         foreach (var p in _productQuantities.Keys)
@@ -36,42 +37,47 @@ public class ShoppingCart
             {
                 var offer = offers[p];
                 var unitPrice = catalog.GetUnitPrice(p);
-                Discount discount = null;
-                var x = 1;
-                if (offer.OfferType == SpecialOfferType.ThreeForTwo)
-                {
-                    x = 3;
-                }
-                else if (offer.OfferType == SpecialOfferType.TwoForAmount)
-                {
-                    x = 2;
-                    if (quantityAsInt >= 2)
-                    {
-                        var total = offer.Argument * (quantityAsInt / x) + quantityAsInt % 2 * unitPrice;
-                        var discountN = unitPrice * quantity - total;
-                        discount = new Discount(p, "2 for " + PrintPrice(offer.Argument), -discountN);
-                    }
-                }
-
-                if (offer.OfferType == SpecialOfferType.FiveForAmount) x = 5;
-                var numberOfXs = quantityAsInt / x;
-                if (offer.OfferType == SpecialOfferType.ThreeForTwo && quantityAsInt > 2)
-                {
-                    var discountAmount = quantity * unitPrice - (numberOfXs * 2 * unitPrice + quantityAsInt % 3 * unitPrice);
-                    discount = new Discount(p, "3 for 2", -discountAmount);
-                }
-
-                if (offer.OfferType == SpecialOfferType.TenPercentDiscount) discount = new Discount(p, offer.Argument + "% off", -quantity * unitPrice * offer.Argument / 100.0);
-                if (offer.OfferType == SpecialOfferType.FiveForAmount && quantityAsInt >= 5)
-                {
-                    var discountTotal = unitPrice * quantity - (offer.Argument * numberOfXs + quantityAsInt % 5 * unitPrice);
-                    discount = new Discount(p, x + " for " + PrintPrice(offer.Argument), -discountTotal);
-                }
-
+                
+                var discount = GetDiscount(p, offer, quantityAsInt, quantity, unitPrice);
                 if (discount != null)
                     receipt.AddDiscount(discount);
             }
         }
+    }
+
+    private Discount? GetDiscount(Product p, Offer offer, int quantityAsInt, 
+        double quantity, double unitPrice)
+    {                
+        if (offer.OfferType == SpecialOfferType.ThreeForTwo && quantityAsInt > 2)
+        {               
+            var numberOfXs = quantityAsInt / 3;
+            var discountAmount = quantity * unitPrice - (numberOfXs * 2 * unitPrice + quantityAsInt % 3 * unitPrice);
+            return new Discount(p, "3 for 2", -discountAmount);            
+        }
+        else if (offer.OfferType == SpecialOfferType.TwoForAmount && quantityAsInt >= 2)
+        {                    
+            return GetDiscountForAmount(p, offer, quantityAsInt, quantity, unitPrice, 2);
+        }
+        else if (offer.OfferType == SpecialOfferType.FiveForAmount && quantityAsInt >= 5)
+        {            
+            return GetDiscountForAmount(p, offer, quantityAsInt, quantity, unitPrice, 5);            
+        }
+        else if (offer.OfferType == SpecialOfferType.TenPercentDiscount)
+        {            
+            return new Discount(p, $"{offer.Argument}% off", -quantity * unitPrice * offer.Argument / 100.0);
+        }
+
+        return null;
+    }
+
+    private Discount GetDiscountForAmount(Product p, Offer offer, int quantityAsInt,
+        double quantity, double unitPrice, int x) 
+    {        
+        var numberOfXs = quantityAsInt / x;
+        var discountTotal = unitPrice * quantity - (offer.Argument * numberOfXs + quantityAsInt % x * unitPrice);
+        var description = $"{x} for {PrintPrice(offer.Argument)}";
+        
+        return new Discount(p, description, -discountTotal);
     }
     
     private string PrintPrice(double price)

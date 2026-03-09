@@ -5,17 +5,12 @@ public class Receipt
     public List<Discount> Discounts { get; } = new();
     public List<ReceiptItem> Items { get; } = [];
 
-    public double GetTotalPrice()
-    {
-        var total = 0.0;
-        foreach (var item in Items) total += item.TotalPrice;
-        foreach (var discount in Discounts) total += discount.DiscountAmount;
-        return total;
-    }
+    public double GetTotalPrice() =>
+        Items.Sum(i => i.TotalPrice) + Discounts.Sum(d => d.DiscountAmount);
 
-    public void AddProduct(Product p, double quantity, double price, double totalPrice)
+    public void AddProduct(Product product, double quantity, double price, double totalPrice)
     {
-        Items.Add(new ReceiptItem(p, quantity, price, totalPrice));
+        Items.Add(new ReceiptItem(product, quantity, price, totalPrice));
     }
     
     public void AddDiscount(Discount discount)
