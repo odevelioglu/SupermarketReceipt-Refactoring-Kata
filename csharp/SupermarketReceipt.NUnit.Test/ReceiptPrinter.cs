@@ -4,38 +4,30 @@ public class ReceiptPrinter
 {
     private static readonly CultureInfo Culture = CultureInfo.CreateSpecificCulture("en-GB");
 
-    private readonly int _columns;
-
-
-    public ReceiptPrinter(int columns)
-    {
-        _columns = columns;
-    }
-
-    public ReceiptPrinter() : this(40)
-    {
-    }
+    private int _columns;        
 
     public string PrintReceipt(Receipt receipt)
     {
+        SetColumnSize(receipt);
+
         var result = new StringBuilder();
-        foreach (var item in receipt.GetItems())
-        {
-            string receiptItem = PrintReceiptItem(item);
-            result.Append(receiptItem);                
-        }
 
-        foreach (var discount in receipt.GetDiscounts())
-        {
-            string discountPresentation = PrintDiscount(discount);
-            result.Append(discountPresentation);
-        }
-
-        {
-            result.Append("\n");
-            result.Append(PrintTotal(receipt));
-        }
+        receipt.GetItems().ForEach(item => result.Append(PrintReceiptItem(item)));
+        receipt.GetDiscounts().ForEach(discount => result.Append(PrintDiscount(discount)));
+                                
+        result.AppendLine();
+        result.Append(PrintTotal(receipt));
+        
         return result.ToString();
+    }
+
+    private void SetColumnSize(Receipt receipt)
+    {
+        var maxNameLength = receipt.GetItems().Any()
+            ? receipt.GetItems().Max(item => item.Product.Name.Length)
+            : 0;
+
+        _columns = Math.Max(40, maxNameLength + 10);
     }
 
     private string PrintTotal(Receipt receipt)
@@ -47,7 +39,7 @@ public class ReceiptPrinter
 
     private string PrintDiscount(Discount discount)
     {
-        string name = discount.Description + "(" + discount.Product.Name + ")";
+        string name = $"{discount.Description}({discount.Product.Name})";
         string value = PrintPrice(discount.DiscountAmount);
 
         return FormatLineWithWhitespace(name, value);
@@ -59,8 +51,8 @@ public class ReceiptPrinter
         string name = item.Product.Name;
         string line = FormatLineWithWhitespace(name, totalPrice);
         if (item.Quantity != 1)
-        {
-            line += "  " + PrintPrice(item.Price) + " * " + PrintQuantity(item) + "\n";
+        {            
+            line += $"  {PrintPrice(item.Price)} * {PrintQuantity(item)}\n";
         }
 
         return line;
@@ -70,25 +62,19 @@ public class ReceiptPrinter
     {
         var line = new StringBuilder();
         line.Append(name);
-        int whitespaceSize = this._columns - name.Length - value.Length;
-        for (int i = 0; i < whitespaceSize; i++) {
-            line.Append(" ");
-        }
+
+        var whitespaceSize = _columns - name.Length - value.Length;
+
+        line.Append(' ', whitespaceSize);        
         line.Append(value);
-        line.Append('\n');
+        line.AppendLine();
         return line.ToString();
     }
 
-    private string PrintPrice(double price)
-    {
-        return price.ToString("N2", Culture);
-    }
+    private string PrintPrice(double price) => price.ToString("N2", Culture);
 
-    private static string PrintQuantity(ReceiptItem item)
-    {
-        return ProductUnit.Each == item.Product.Unit
-            ? ((int) item.Quantity).ToString()
-            : item.Quantity.ToString("N3", Culture);
-    }
-        
+    private static string PrintQuantity(ReceiptItem item) =>
+        ProductUnit.Each == item.Product.Unit
+            ? ((int)item.Quantity).ToString()
+            : item.Quantity.ToString("N3", Culture);            
 }

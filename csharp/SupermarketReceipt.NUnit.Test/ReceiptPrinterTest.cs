@@ -65,7 +65,7 @@ public class ReceiptPrinterTest
     {
         _receipt.AddProduct(_toothbrush, 1, 0.99, 0.99);
         // Use a narrow receipt width to exercise whitespace calculation
-        return Verifier.Verify(new ReceiptPrinter(20).PrintReceipt(_receipt));
+        return Verifier.Verify(new ReceiptPrinter().PrintReceipt(_receipt));
     }
 
     [TestCase]
