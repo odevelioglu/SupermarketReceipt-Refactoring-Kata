@@ -1,25 +1,4 @@
-namespace SupermarketReceipt;
-
-public interface IOffer
-{
-    Product Product { get; }
-    SpecialOfferType OfferType { get; }
-    double Argument { get; }
-}
-
-public class Offer: IOffer
-{
-    public Offer(SpecialOfferType offerType, Product product, double argument)
-    {
-        OfferType = offerType;
-        Argument = argument;
-        Product = product;
-    }
-
-    public Product Product { get; }
-    public SpecialOfferType OfferType { get; }
-    public double Argument { get; }
-}
+namespace SupermarketReceipt.Offers;
 
 public class ThreeForTwoOffer: IOffer
 {
@@ -40,7 +19,7 @@ public class ThreeForTwoOffer: IOffer
         {
             var numberOfXs = quantityAsInt / 3;
             var discountAmount = quantity * unitPrice - (numberOfXs * 2 * unitPrice + quantityAsInt % 3 * unitPrice);
-            return new Discount(this.Product, "3 for 2", -discountAmount);
+            return new Discount(Product, "3 for 2", -discountAmount);
         }
         
         return null;

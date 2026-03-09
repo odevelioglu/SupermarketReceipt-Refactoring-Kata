@@ -1,11 +1,12 @@
+using SupermarketReceipt.Offers;
+
 namespace SupermarketReceipt;
 
 public class ShoppingCart
 {
     public List<ProductQuantity> Items { get; } = new ();
     private readonly Dictionary<Product, double> _productQuantities = new ();
-    private static readonly CultureInfo Culture = CultureInfo.CreateSpecificCulture("en-GB");
-
+    
     public void AddItem(Product product)
     {
         AddItemQuantity(product, 1.0);
@@ -51,34 +52,15 @@ public class ShoppingCart
         {               
              return threeForTwoOffer.GetDiscount(quantity, unitPrice);
         }
-        else if (offer.OfferType == SpecialOfferType.TwoForAmount && quantityAsInt >= 2)
+        else if (offer is ForAmountOffer forAmountOffer)
         {                    
-            return GetDiscountForAmount(p, offer, quantityAsInt, quantity, unitPrice, 2);
-        }
-        else if (offer.OfferType == SpecialOfferType.FiveForAmount && quantityAsInt >= 5)
-        {            
-            return GetDiscountForAmount(p, offer, quantityAsInt, quantity, unitPrice, 5);            
-        }
+            return forAmountOffer.GetDiscount(quantity, unitPrice);
+        }        
         else if (offer.OfferType == SpecialOfferType.TenPercentDiscount)
         {            
             return new Discount(p, $"{offer.Argument}% off", -quantity * unitPrice * offer.Argument / 100.0);
         }
 
         return null;
-    }
-
-    private Discount GetDiscountForAmount(Product p, IOffer offer, int quantityAsInt,
-        double quantity, double unitPrice, int x) 
-    {        
-        var numberOfXs = quantityAsInt / x;
-        var discountTotal = unitPrice * quantity - (offer.Argument * numberOfXs + quantityAsInt % x * unitPrice);
-        var description = $"{x} for {PrintPrice(offer.Argument)}";
-        
-        return new Discount(p, description, -discountTotal);
-    }
-    
-    private string PrintPrice(double price)
-    {
-        return price.ToString("N2", Culture);
-    }
+    }    
 }

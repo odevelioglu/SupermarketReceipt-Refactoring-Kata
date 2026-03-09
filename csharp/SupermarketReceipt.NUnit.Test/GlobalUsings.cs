@@ -7,3 +7,4 @@ global using System.Threading.Tasks;
 global using VerifyNUnit;
 global using System.Runtime.CompilerServices;
 global using System.Collections.Generic;
+global using SupermarketReceipt.Offers;

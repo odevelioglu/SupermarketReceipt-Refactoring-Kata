@@ -6,8 +6,8 @@ public class TwoForAmountTests: SpecialOffersTestBase
     public Task TwoForAmountDiscount()
     {
         _theCart.AddItem(_cherryTomatoes);
-        _theCart.AddItem(_cherryTomatoes);
-        _teller.AddSpecialOffer(SpecialOfferType.TwoForAmount, _cherryTomatoes, .99);
+        _theCart.AddItem(_cherryTomatoes);        
+        _teller.AddSpecialOffer(new ForAmountOffer(_cherryTomatoes, 2, .99));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
     }
@@ -17,8 +17,8 @@ public class TwoForAmountTests: SpecialOffersTestBase
     {
         _theCart.AddItem(_cherryTomatoes);
         _theCart.AddItem(_cherryTomatoes);
-        _theCart.AddItem(_cherryTomatoes);
-        _teller.AddSpecialOffer(SpecialOfferType.TwoForAmount, _cherryTomatoes, .99);
+        _theCart.AddItem(_cherryTomatoes);        
+        _teller.AddSpecialOffer(new ForAmountOffer(_cherryTomatoes, 2, .99));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
     }
@@ -30,7 +30,7 @@ public class TwoForAmountTests: SpecialOffersTestBase
         _theCart.AddItem(_cherryTomatoes);
         _theCart.AddItem(_cherryTomatoes);
         _theCart.AddItem(_cherryTomatoes);
-        _teller.AddSpecialOffer(SpecialOfferType.TwoForAmount, _cherryTomatoes, .99);
+        _teller.AddSpecialOffer(new ForAmountOffer(_cherryTomatoes, 2, .99));        
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
     }
