@@ -56,9 +56,9 @@ public class ShoppingCart
         {                    
             return forAmountOffer.GetDiscount(quantity, unitPrice);
         }        
-        else if (offer.OfferType == SpecialOfferType.TenPercentDiscount)
+        else if (offer is TenPercentOffer tenPercentOffer)
         {            
-            return new Discount(p, $"{offer.Argument}% off", -quantity * unitPrice * offer.Argument / 100.0);
+            return tenPercentOffer.GetDiscount(quantity, unitPrice);
         }
 
         return null;

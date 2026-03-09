@@ -16,7 +16,7 @@ public class TenPercentDiscountTests: SpecialOffersTestBase
         cart.AddItemQuantity(apples, 2.5);
 
         var teller = new Teller(catalog);
-        teller.AddSpecialOffer(SpecialOfferType.TenPercentDiscount, toothbrush, 10.0);
+        teller.AddSpecialOffer(new TenPercentOffer(toothbrush)); //not in the cart
 
         // ACT
         var receipt = teller.ChecksOutArticlesFrom(cart);
@@ -36,7 +36,7 @@ public class TenPercentDiscountTests: SpecialOffersTestBase
     public Task PercentDiscount()
     {
         _theCart.AddItem(_rice);
-        _teller.AddSpecialOffer(SpecialOfferType.TenPercentDiscount, _rice, 10.0);
+        _teller.AddSpecialOffer(new TenPercentOffer(_rice));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
     }
@@ -45,10 +45,10 @@ public class TenPercentDiscountTests: SpecialOffersTestBase
     public Task PercentDiscountWithTwoProducts()
     {
         _theCart.AddItem(_rice);
-        _teller.AddSpecialOffer(SpecialOfferType.TenPercentDiscount, _rice, 10.0);
+        _teller.AddSpecialOffer(new TenPercentOffer(_rice));
 
         _theCart.AddItem(_apples);
-        _teller.AddSpecialOffer(SpecialOfferType.TenPercentDiscount, _apples, 10.0);
+        _teller.AddSpecialOffer(new TenPercentOffer(_apples));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
     }
@@ -57,7 +57,7 @@ public class TenPercentDiscountTests: SpecialOffersTestBase
     public Task TenPercentDiscountOnKiloProduct()
     {
         _theCart.AddItemQuantity(_apples, 2.5);
-        _teller.AddSpecialOffer(SpecialOfferType.TenPercentDiscount, _apples, 10.0);
+        _teller.AddSpecialOffer(new TenPercentOffer(_apples));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
 
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
