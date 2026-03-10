@@ -1,54 +1,20 @@
-using System.Collections.Generic;
+namespace SupermarketReceipt;
 
-namespace SupermarketReceipt
+public class Receipt
 {
-    public class Receipt
+    public List<Discount> Discounts { get; } = new();
+    public List<ReceiptItem> Items { get; } = [];
+
+    public double GetTotalPrice() =>
+        Items.Sum(i => i.TotalPrice) + Discounts.Sum(d => d.DiscountAmount);
+
+    public void AddProduct(Product product, double quantity, double price, double totalPrice)
     {
-        private readonly List<Discount> _discounts = new List<Discount>();
-        private readonly List<ReceiptItem> _items = new List<ReceiptItem>();
-
-        public double GetTotalPrice()
-        {
-            var total = 0.0;
-            foreach (var item in _items) total += item.TotalPrice;
-            foreach (var discount in _discounts) total += discount.DiscountAmount;
-            return total;
-        }
-
-        public void AddProduct(Product p, double quantity, double price, double totalPrice)
-        {
-            _items.Add(new ReceiptItem(p, quantity, price, totalPrice));
-        }
-
-        public List<ReceiptItem> GetItems()
-        {
-            return new List<ReceiptItem>(_items);
-        }
-
-        public void AddDiscount(Discount discount)
-        {
-            _discounts.Add(discount);
-        }
-
-        public List<Discount> GetDiscounts()
-        {
-            return _discounts;
-        }
+        Items.Add(new ReceiptItem(product, quantity, price, totalPrice));
     }
-
-    public class ReceiptItem
+    
+    public void AddDiscount(Discount discount)
     {
-        public ReceiptItem(Product p, double quantity, double price, double totalPrice)
-        {
-            Product = p;
-            Quantity = quantity;
-            Price = price;
-            TotalPrice = totalPrice;
-        }
-
-        public Product Product { get; }
-        public double Price { get; }
-        public double TotalPrice { get; }
-        public double Quantity { get; }
+        Discounts.Add(discount);
     }
 }

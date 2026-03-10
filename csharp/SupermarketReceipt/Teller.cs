@@ -1,38 +1,52 @@
-using System.Collections.Generic;
+namespace SupermarketReceipt;
 
-namespace SupermarketReceipt
+public class Teller
 {
-    public class Teller
+    private readonly ISupermarketCatalog _catalog;
+    private readonly Dictionary<Product, IOffer> _offers = new ();
+
+    public Teller(ISupermarketCatalog catalog)
     {
-        private readonly SupermarketCatalog _catalog;
-        private readonly Dictionary<Product, Offer> _offers = new Dictionary<Product, Offer>();
+        _catalog = catalog;
+    }
+    
+    public void AddSpecialOffer(IOffer offer)
+    {
+        _offers[offer.Product] = offer;
+    }
 
-        public Teller(SupermarketCatalog catalog)
-        {
-            _catalog = catalog;
+    public Receipt ChecksOutArticlesFrom(ShoppingCart cart)
+    {
+        var receipt = new Receipt();
+        
+        foreach (var item in cart.Items)
+        {           
+            var unitPrice = _catalog.GetUnitPrice(item.Product);
+            var price = item.Quantity * unitPrice;
+            receipt.AddProduct(item.Product, item.Quantity, unitPrice, price);
         }
 
-        public void AddSpecialOffer(SpecialOfferType offerType, Product product, double argument)
-        {
-            _offers[product] = new Offer(offerType, product, argument);
-        }
+        var discounts = GetDiscounts(cart);
+        receipt.Discounts.AddRange(discounts);
 
-        public Receipt ChecksOutArticlesFrom(ShoppingCart theCart)
+        return receipt;
+    }
+
+    private IEnumerable<Discount> GetDiscounts(ShoppingCart cart)
+    {
+        foreach (var kvp in cart.ProductQuantities)
         {
-            var receipt = new Receipt();
-            var productQuantities = theCart.GetItems();
-            foreach (var pq in productQuantities)
+            var product = kvp.Key;
+            var quantity = kvp.Value;
+
+            if (_offers.TryGetValue(product, out var offer))
             {
-                var p = pq.Product;
-                var quantity = pq.Quantity;
-                var unitPrice = _catalog.GetUnitPrice(p);
-                var price = quantity * unitPrice;
-                receipt.AddProduct(p, quantity, unitPrice, price);
+                var unitPrice = _catalog.GetUnitPrice(product);
+
+                var discount = offer.GetDiscount(quantity, unitPrice);
+                if (discount != null)
+                    yield return discount;
             }
-
-            theCart.HandleOffers(receipt, _offers, _catalog);
-
-            return receipt;
         }
     }
 }

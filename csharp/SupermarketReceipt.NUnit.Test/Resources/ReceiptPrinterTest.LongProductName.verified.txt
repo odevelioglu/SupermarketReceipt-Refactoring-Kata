@@ -1,0 +1,3 @@
+﻿very-long-product-name-that-exceeds-columns      9.99
+
+Total:                                           9.99
