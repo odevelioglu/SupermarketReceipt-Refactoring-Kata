@@ -13,7 +13,7 @@ public class OfferBase
     public Product Product { get; }
     public SpecialOfferType OfferType { get; }
 
-    protected string PrintPrice(double price)
+    protected static string PrintPrice(double price)
     {
         return price.ToString("N2", Culture);
     }

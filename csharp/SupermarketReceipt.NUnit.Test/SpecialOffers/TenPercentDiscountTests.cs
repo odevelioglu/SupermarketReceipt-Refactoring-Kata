@@ -13,7 +13,7 @@ public class TenPercentDiscountTests: SpecialOffersTestBase
         catalog.AddProduct(apples, 1.99);
 
         var cart = new ShoppingCart();
-        cart.AddItemQuantity(apples, 2.5);
+        cart.AddItem(apples, 2.5);
 
         var teller = new Teller(catalog);
         teller.AddSpecialOffer(new TenPercentOffer(toothbrush)); //not in the cart
@@ -56,7 +56,7 @@ public class TenPercentDiscountTests: SpecialOffersTestBase
     [TestCase]
     public Task TenPercentDiscountOnKiloProduct()
     {
-        _theCart.AddItemQuantity(_apples, 2.5);
+        _theCart.AddItem(_apples, 2.5);
         _teller.AddSpecialOffer(new TenPercentOffer(_apples));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
 

@@ -29,7 +29,7 @@ public class NoOfferTests: SpecialOffersTestBase
     [TestCase]
     public Task LooseWeightProduct()
     {
-        _theCart.AddItemQuantity(_apples, .5);
+        _theCart.AddItem(_apples, .5);
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
     }

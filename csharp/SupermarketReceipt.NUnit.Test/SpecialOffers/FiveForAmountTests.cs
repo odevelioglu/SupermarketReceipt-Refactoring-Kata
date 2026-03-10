@@ -5,7 +5,7 @@ public class FiveForAmountTests: SpecialOffersTestBase
     [TestCase]
     public Task FiveForAmountDiscount()
     {
-        _theCart.AddItemQuantity(_apples, 5);
+        _theCart.AddItem(_apples, 5);
         _teller.AddSpecialOffer(new ForAmountOffer(_apples, 5, 6.99));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
@@ -14,7 +14,7 @@ public class FiveForAmountTests: SpecialOffersTestBase
     [TestCase]
     public Task FiveForAmountDiscountWithSix()
     {
-        _theCart.AddItemQuantity(_apples, 6);
+        _theCart.AddItem(_apples, 6);
         _teller.AddSpecialOffer(new ForAmountOffer(_apples, 5, 6.99));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
@@ -23,7 +23,7 @@ public class FiveForAmountTests: SpecialOffersTestBase
     [TestCase]
     public Task FiveForAmountDiscountWithSixteen()
     {
-        _theCart.AddItemQuantity(_apples, 16);
+        _theCart.AddItem(_apples, 16);
         _teller.AddSpecialOffer(new ForAmountOffer(_apples, 5, 6.99));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));
@@ -32,7 +32,7 @@ public class FiveForAmountTests: SpecialOffersTestBase
     [TestCase]
     public Task FiveForAmountDiscountWithFour()
     {
-        _theCart.AddItemQuantity(_apples, 4);        
+        _theCart.AddItem(_apples, 4);        
         _teller.AddSpecialOffer(new ForAmountOffer(_apples, 5, 6.99));
         var receipt = _teller.ChecksOutArticlesFrom(_theCart);
         return Verifier.Verify(new ReceiptPrinter().PrintReceipt(receipt));

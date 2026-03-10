@@ -15,20 +15,38 @@ public class Teller
         _offers[offer.Product] = offer;
     }
 
-    public Receipt ChecksOutArticlesFrom(ShoppingCart theCart)
+    public Receipt ChecksOutArticlesFrom(ShoppingCart cart)
     {
         var receipt = new Receipt();
         
-        foreach (var pq in theCart.Items)
+        foreach (var item in cart.Items)
         {           
-            var unitPrice = _catalog.GetUnitPrice(pq.Product);
-            var price = pq.Quantity * unitPrice;
-            receipt.AddProduct(pq.Product, pq.Quantity, unitPrice, price);
+            var unitPrice = _catalog.GetUnitPrice(item.Product);
+            var price = item.Quantity * unitPrice;
+            receipt.AddProduct(item.Product, item.Quantity, unitPrice, price);
         }
 
-        var discounts = theCart.GetDiscounts(_offers, _catalog);
+        var discounts = GetDiscounts(cart);
         receipt.Discounts.AddRange(discounts);
 
         return receipt;
+    }
+
+    private IEnumerable<Discount> GetDiscounts(ShoppingCart cart)
+    {
+        foreach (var kvp in cart.ProductQuantities)
+        {
+            var product = kvp.Key;
+            var quantity = kvp.Value;
+
+            if (_offers.TryGetValue(product, out var offer))
+            {
+                var unitPrice = _catalog.GetUnitPrice(product);
+
+                var discount = offer.GetDiscount(quantity, unitPrice);
+                if (discount != null)
+                    yield return discount;
+            }
+        }
     }
 }
